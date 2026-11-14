@@ -1,0 +1,200 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-11-14",
+  "regions": {
+    "global": [
+      {
+        "id": "bbc-news-top",
+        "provider": "BBC News",
+        "category": "Top Stories",
+        "rss_url": "http://feeds.bbci.co.uk/news/rss.xml",
+        "type": "direct_rss",
+        "poll_interval_minutes": 10
+      },
+      {
+        "id": "bbc-news-world",
+        "provider": "BBC News",
+        "category": "World",
+        "rss_url": "http://feeds.bbci.co.uk/news/world/rss.xml",
+        "type": "direct_rss",
+        "poll_interval_minutes": 10
+      },
+      {
+        "id": "the-guardian-world",
+        "provider": "The Guardian",
+        "category": "World",
+        "rss_url": "https://www.theguardian.com/world/rss",
+        "type": "direct_rss",
+        "poll_interval_minutes": 15
+      },
+      {
+        "id": "the-guardian-tech",
+        "provider": "The Guardian",
+        "category": "Technology",
+        "rss_url": "https://www.theguardian.com/uk/technology/rss",
+        "type": "direct_rss",
+        "poll_interval_minutes": 30
+      },
+      {
+        "id": "techcrunch-main",
+        "provider": "TechCrunch",
+        "category": "Technology",
+        "rss_url": "https://techcrunch.com/feed/",
+        "type": "direct_rss",
+        "poll_interval_minutes": 15
+      },
+      {
+        "id": "npr-news",
+        "provider": "NPR",
+        "category": "Top Stories",
+        "rss_url": "https://feeds.npr.org/1001/rss.xml",
+        "type": "direct_rss",
+        "poll_interval_minutes": 15
+      },
+      {
+        "id": "al-jazeera-all",
+        "provider": "Al Jazeera",
+        "category": "World",
+        "rss_url": "https://www.aljazeera.com/xml/rss/all.xml",
+        "type": "direct_rss",
+        "poll_interval_minutes": 15
+      },
+      {
+        "id": "nytimes-world",
+        "provider": "The New York Times",
+        "category": "World",
+        "rss_url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+        "type": "direct_rss",
+        "poll_interval_minutes": 15
+      },
+      {
+        "id": "reuters-google-proxy",
+        "provider": "Reuters",
+        "category": "General",
+        "rss_url": "https://news.google.com/rss/search?q=site:reuters.com&hl=en-US&gl=US&ceid=US:en",
+        "type": "google_news_proxy",
+        "notes": "Reuters discontinued official free public RSS; uses Google News site-search RSS workaround.",
+        "poll_interval_minutes": 15
+      },
+      {
+        "id": "ap-news-google-proxy",
+        "provider": "Associated Press (AP)",
+        "category": "General",
+        "rss_url": "https://news.google.com/rss/search?q=site:apnews.com&hl=en-US&gl=US&ceid=US:en",
+        "type": "google_news_proxy",
+        "notes": "AP deprecated public RSS; uses Google News site-search RSS workaround.",
+        "poll_interval_minutes": 15
+      }
+    ],
+    "australia": [
+      {
+        "id": "abc-news-au-top",
+        "provider": "ABC News Australia",
+        "category": "Top Stories",
+        "rss_url": "https://www.abc.net.au/news/feed/2942460/rss.xml",
+        "type": "direct_rss",
+        "poll_interval_minutes": 10
+      },
+      {
+        "id": "abc-news-au-just-in",
+        "provider": "ABC News Australia",
+        "category": "Just In",
+        "rss_url": "https://www.abc.net.au/news/feed/46182/rss.xml",
+        "type": "direct_rss",
+        "poll_interval_minutes": 10
+      },
+      {
+        "id": "sbs-news-latest",
+        "provider": "SBS News",
+        "category": "Latest News",
+        "rss_url": "https://www.sbs.com.au/news/topic/latest/feed",
+        "type": "direct_rss",
+        "poll_interval_minutes": 15
+      },
+      {
+        "id": "smh-top-news",
+        "provider": "The Sydney Morning Herald",
+        "category": "Top Stories",
+        "rss_url": "https://www.smh.com.au/rss/feed.xml",
+        "type": "direct_rss",
+        "poll_interval_minutes": 15
+      },
+      {
+        "id": "the-age-top-news",
+        "provider": "The Age",
+        "category": "Top Stories",
+        "rss_url": "https://www.theage.com.au/rss/feed.xml",
+        "type": "direct_rss",
+        "poll_interval_minutes": 15
+      },
+      {
+        "id": "the-guardian-au",
+        "provider": "The Guardian Australia",
+        "category": "Australia News",
+        "rss_url": "https://www.theguardian.com/australia-news/rss",
+        "type": "direct_rss",
+        "poll_interval_minutes": 15
+      },
+      {
+        "id": "crikey-politics",
+        "provider": "Crikey",
+        "category": "Politics",
+        "rss_url": "https://www.crikey.com.au/politics/feed/",
+        "type": "direct_rss",
+        "poll_interval_minutes": 30
+      },
+      {
+        "id": "the-conversation-au",
+        "provider": "The Conversation Australia",
+        "category": "Analysis & Research",
+        "rss_url": "https://theconversation.com/au/articles.atom",
+        "type": "direct_atom",
+        "poll_interval_minutes": 60
+      }
+    ],
+    "fiji": [
+      {
+        "id": "fiji-times-main",
+        "provider": "The Fiji Times",
+        "category": "General",
+        "rss_url": "https://www.fijitimes.com.fj/feed/",
+        "type": "direct_rss",
+        "poll_interval_minutes": 15
+      },
+      {
+        "id": "fbc-news-main",
+        "provider": "FBC News (Fijian Broadcasting Corporation)",
+        "category": "General",
+        "rss_url": "https://www.fbcnews.com.fj/feed/",
+        "type": "direct_rss",
+        "poll_interval_minutes": 15
+      },
+      {
+        "id": "fiji-sun-main",
+        "provider": "Fiji Sun",
+        "category": "General",
+        "rss_url": "https://fijisun.com.fj/feed/",
+        "type": "direct_rss",
+        "poll_interval_minutes": 20
+      },
+      {
+        "id": "fijivillage-google-proxy",
+        "provider": "Fijivillage",
+        "category": "General",
+        "rss_url": "https://news.google.com/rss/search?q=site:fijivillage.com&hl=en-FJ&gl=FJ&ceid=FJ:en",
+        "type": "google_news_proxy",
+        "notes": "Fijivillage uses a custom CMS without a standard public /feed endpoint; indexed reliably via Google News site search.",
+        "poll_interval_minutes": 20
+      },
+      {
+        "id": "rnz-pacific-fiji",
+        "provider": "RNZ Pacific (Fiji Coverage)",
+        "category": "Regional / Pacific",
+        "rss_url": "https://news.google.com/rss/search?q=site:rnz.co.nz/international/pacific-news+Fiji&hl=en-NZ&gl=NZ&ceid=NZ:en",
+        "type": "google_news_proxy",
+        "notes": "High-reliability regional coverage of Fiji from Radio New Zealand Pacific.",
+        "poll_interval_minutes": 30
+      }
+    ]
+  }
+}
