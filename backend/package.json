@@ -1,0 +1,24 @@
+{
+  "name": "prism-backend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/copy-config.mjs",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.2",
+    "fastify": "^5.2.1",
+    "rss-parser": "^3.13.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  }
+}
