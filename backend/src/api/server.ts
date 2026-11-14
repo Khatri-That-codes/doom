@@ -55,7 +55,7 @@ export function createServer(store = new InMemoryStore()) {
     return reply.code(201).send({ card: pulseEngine.createCard(story, body.data.interest) });
   });
 
-  server.get("/api/daily-drop", async () => ({ drop: dailyDropEngine.getOrCreate() }));
+  server.get("/api/daily-drop", async () => ({ drop: await dailyDropEngine.getOrCreate() }));
 
   server.addHook("onReady", async () => ingestionScheduler.start());
   server.addHook("onClose", async () => ingestionScheduler.stop());

@@ -125,24 +125,19 @@ function Pulse({articles,filters,active,setActive,saved,bookmark,setOpen}:any){
  </div>}
 
 function Food({drop,loading,goExplore}:{drop:DailyDrop|null;loading:boolean;goExplore:()=>void}){
- const [vote,setVote]=useState<number|null>(null);
  const [left,setLeft]=useState('');
  useEffect(()=>{const f=()=>{const n=new Date(),m=new Date(n);m.setHours(24,0,0,0);const s=Math.floor((+m-+n)/1000);setLeft([s/3600,s/60%60,s%60].map(v=>String(Math.floor(v)).padStart(2,'0')).join(':'))};f();const i=setInterval(f,1000);return()=>clearInterval(i)},[]);
- const base=[412,268];const tot=base[0]+base[1]+(vote===null?0:1);
- const pct=(i:number)=>Math.round((base[i]+(vote===i?1:0))/tot*100);
  return <div className="mx-auto max-w-2xl p-4">
   <article className="mc-panel p-6 md:p-10" style={{background:'color-mix(in srgb,var(--card) 90%,var(--amethyst))'}}>
    {loading&&<p className="text-sm">Loading today&apos;s drop...</p>}
-   {drop&&<><div className="mb-4 flex flex-wrap items-center justify-between gap-2"><Badge c="Food">{drop.topicBadge}</Badge><span className="text-xs opacity-70">Daily Drop</span></div>
-   <h2 className="mb-4 text-3xl font-bold leading-tight">{drop.hook}</h2>
-   <p className="mb-4 text-lg leading-8">{drop.breakdown}</p>
-   <aside className="mc-slot my-6 p-4"><h3 className={`${px} mb-1 text-sm text-amethyst`}>Why it matters in today's news</h3>
-    <p className="mb-2 text-sm leading-relaxed">{drop.newsBridge}</p>
-    <button onClick={goExplore} className="mc-btn px-3 py-1.5 text-xs">Back to Explore</button></aside>
-   <h3 className="mb-2 font-bold">{drop.question}</h3>
-   <div className="grid gap-2">{drop.options.map((o,i)=><button key={i} disabled={vote!==null} onClick={()=>setVote(i)} className="mc-btn relative overflow-hidden p-3 text-left text-sm">
-    {vote!==null&&<span className="absolute inset-y-0 left-0 bg-amethyst/50 transition-all duration-700" style={{width:pct(i)+'%'}}/>}
-    <span className="relative flex justify-between font-body"><span>{o}</span>{vote!==null&&<b>{pct(i)}%</b>}</span></button>)}</div>
+   {drop&&<><div className="mb-4 flex flex-wrap items-center justify-between gap-2"><Badge c="Food">{drop.source}</Badge><span className="text-xs opacity-70">Daily Drop</span></div>
+   <h2 className="mb-4 text-3xl font-bold leading-tight">{drop.title}</h2>
+   {drop.imageUrl&&<img src={drop.imageUrl} alt="" className="mb-4 w-full border-4 border-shade/70 object-cover" />}
+   <p className="mb-4 text-lg leading-8">{drop.summary}</p>
+   <aside className="mc-slot my-6 p-4"><h3 className={`${px} mb-1 text-sm text-amethyst`}>Learn more</h3>
+    <p className="mb-2 text-sm leading-relaxed">Read the full article from {drop.source} to explore today&apos;s topic.</p>
+    <a href={drop.url} target="_blank" rel="noopener noreferrer" className="mc-btn inline-block px-3 py-1.5 text-xs">Read on {drop.source}</a></aside>
+   <p className="text-xs opacity-70">Published {new Date(drop.publishedAt).toLocaleDateString()} · <button onClick={goExplore} className="underline">Back to Explore</button></p>
    <p className={`${px} mt-6 text-center text-xs`}>Next drop in {left||'--:--:--'}</p></>}
   </article></div>}
 

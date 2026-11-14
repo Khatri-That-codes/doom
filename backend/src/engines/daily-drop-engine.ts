@@ -1,10 +1,30 @@
+import Parser from "rss-parser";
+import { readFileSync } from "node:fs";
+import { z } from "zod";
 import type { DailyDrop } from "../domain/types.js";
 import { InMemoryStore } from "../store/in-memory-store.js";
 
-export class DailyDropEngine {
-  public constructor(private readonly store: InMemoryStore) {}
+type FeedItem = Parser.Item & { contentSnippet?: string; description?: string };
+type FeedLoader = () => Promise<FeedItem[]>;
 
-  getOrCreate(date = new Date()): DailyDrop {
+const config = z.object({
+  source: z.string().min(1),
+  topicBadge: z.string().min(1),
+  feedUrl: z.string().url()
+}).parse(JSON.parse(readFileSync(new URL("../../config/daily-drop.json", import.meta.url), "utf8")));
+
+export class DailyDropEngine {
+  private readonly parser = new Parser();
+  private readonly feedLoader: FeedLoader;
+
+  public constructor(
+    private readonly store: InMemoryStore,
+    feedLoader?: FeedLoader
+  ) {
+    this.feedLoader = feedLoader ?? (async () => (await this.parser.parseURL(config.feedUrl)).items);
+  }
+
+  async getOrCreate(date = new Date()): Promise<DailyDrop> {
     const releaseDate = [
       date.getFullYear(),
       String(date.getMonth() + 1).padStart(2, "0"),
@@ -15,22 +35,31 @@ export class DailyDropEngine {
       return existing;
     }
 
+    const items = (await this.feedLoader()).filter((item) => item.title && item.link);
+    if (!items.length) {
+      throw new Error(`Daily Drop feed returned no usable articles: ${config.feedUrl}`);
+    }
+
+    const article = items[this.dailyIndex(releaseDate, items.length)];
     const drop: DailyDrop = {
       id: `drop_${releaseDate}`,
       releaseDate,
-      topicBadge: "Behavioral Economics",
-      hook: "What if the easiest choice is quietly shaping every choice after it?",
-      breakdown:
-        "Small defaults influence behavior because they reduce the effort required to decide. " +
-        "That convenience is not inherently good or bad; its impact depends on who set the default, " +
-        "what information is visible, and how easy it is to choose another path. Understanding defaults " +
-        "helps us design calmer products and notice when convenience has become invisible persuasion.",
-      newsBridge: "This idea appears whenever a new product changes what people see first, skip, or accept.",
-      question: "Should digital defaults be designed primarily for convenience or user control?",
-      options: ["Convenience", "User control"]
+      source: config.source,
+      title: article.title?.trim() ?? "HowStuffWorks article",
+      summary: (article.contentSnippet ?? article.content ?? article.description ?? "").trim(),
+      url: article.link ?? config.feedUrl,
+      publishedAt: article.pubDate ? new Date(article.pubDate).toISOString() : releaseDate
     };
 
     this.store.saveDailyDrop(drop);
     return drop;
+  }
+
+  private dailyIndex(date: string, itemCount: number): number {
+    let hash = 0;
+    for (const character of date) {
+      hash = (hash * 31 + character.charCodeAt(0)) >>> 0;
+    }
+    return hash % itemCount;
   }
 }

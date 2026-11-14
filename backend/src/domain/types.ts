@@ -26,12 +26,12 @@ export interface PulseCard {
 export interface DailyDrop {
   id: string;
   releaseDate: string;
-  topicBadge: string;
-  hook: string;
-  breakdown: string;
-  newsBridge: string;
-  question: string;
-  options: [string, string];
+  source: string;
+  title: string;
+  summary: string;
+  url: string;
+  publishedAt: string;
+  imageUrl?: string;
 }
 
 export interface FeedSource {
