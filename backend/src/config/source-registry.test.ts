@@ -7,7 +7,7 @@ describe("source registry", () => {
 
     expect(sources).toHaveLength(23);
     expect(new Set(sources.map((source) => source.category))).toEqual(
-      new Set(["trending", "tech", "world"])
+      new Set(["trending", "tech", "world", "science"])
     );
     expect(sources.every((source) => source.pollIntervalMinutes > 0)).toBe(true);
     expect(sources.some((source) => source.name === "ABC News Australia")).toBe(true);
