@@ -1,0 +1,24 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+:root{
+/* THEME: Overworld (light) */
+--canvas:#F3EFE6;--surface:#E6E0D4;--card:#FAF7F0;--ink:#1B1B18;
+--hi:rgba(255,255,255,.9);--lo:#8a8478; /* bevel highlight / shadow */
+/* ORES (shared by both themes; override inside .dark if wanted) */
+--redstone:#D9381E;--diamond:#2CBAA8;--gold:#E5A91A;--emerald:#17DD62;--amethyst:#9B5DE5;
+/* OTHER */
+--shade:#000000; /* header/nav borders, modal overlays */
+--onore:#000000; /* text on ore badges */
+--focus:var(--diamond)}
+/* THEME: Deepslate (dark) */
+.dark{--canvas:#121316;--surface:#1E2026;--card:#191B20;--ink:#F2EFE9;--hi:rgba(255,255,255,.16);--lo:#000}
+body{background:var(--canvas);color:var(--ink);font-family:var(--font-body),sans-serif}
+@layer components{
+.mc-panel{border:3px solid;border-color:var(--hi) var(--lo) var(--lo) var(--hi);background:var(--card)}
+.mc-slot{border:3px solid;border-color:var(--lo) var(--hi) var(--hi) var(--lo);background:var(--surface)}
+.mc-btn{border:3px solid;border-color:var(--hi) var(--lo) var(--lo) var(--hi);background:var(--surface);font-family:var(--font-pixel);cursor:pointer;transition:none}
+.mc-btn:active{transform:translateY(2px);border-color:var(--lo) var(--hi) var(--hi) var(--lo)}
+.mc-btn:focus-visible,button:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.mc-on{outline:3px solid var(--ink);outline-offset:-3px}}
+@keyframes tick{to{transform:translateX(-50%)}}.tick{animation:tick 30s linear infinite}
+@keyframes xp{0%{opacity:0;transform:translateY(10px) scale(.8)}20%{opacity:1}100%{opacity:0;transform:translateY(-90px) scale(1.2)}}.xp{animation:xp 1.1s ease-out forwards}
+@media(prefers-reduced-motion:reduce){.tick,.xp{animation:none}*{transition:none!important}}
