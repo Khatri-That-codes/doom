@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { getDailyDrop, getStories, type A, type DailyDrop } from './api';
-import { INTERESTS, ORE, TICKER } from './data';
+import { getDailyDrop, getPulseFilters, getStories, type A, type DailyDrop, type PulseFilters } from './api';
+import { ORE, TICKER } from './data';
 
 const px='font-pixel';
 const Badge=({c,children}:{c:string;children:React.ReactNode})=><span className={`${px} inline-block px-2 py-0.5 text-[11px] text-onore`} style={{background:ORE[c]}}>{children}</span>;
@@ -13,15 +13,20 @@ export default function Home(){
  const [saved,setSaved]=useState<Set<string>>(new Set());
  const [open,setOpen]=useState<A|null>(null);
  const [cat,setCat]=useState('All');
- const [active,setActive]=useState<string[]>(INTERESTS.slice(0,4));
+ const [active,setActive]=useState<string[]>([]);
+ const [filters,setFilters]=useState<PulseFilters|null>(null);
  const [articles,setArticles]=useState<A[]>([]);
  const [dailyDrop,setDailyDrop]=useState<DailyDrop|null>(null);
  const [loading,setLoading]=useState(true);
  const [error,setError]=useState<string|null>(null);
  useEffect(()=>{const d=localStorage.getItem('doom-theme')==='dark';setDark(d);document.documentElement.classList.toggle('dark',d)},[]);
  useEffect(()=>{
-  Promise.all([getStories(),getDailyDrop()])
-   .then(([nextArticles,nextDrop])=>{setArticles(nextArticles);setDailyDrop(nextDrop);setError(null)})
+  Promise.all([getDailyDrop(),getPulseFilters()])
+   .then(async ([nextDrop,nextFilters])=>{
+    const nextArticles=await getStories(nextFilters.categories);
+    setArticles(nextArticles);setDailyDrop(nextDrop);setFilters(nextFilters);
+    setActive(nextFilters.interests.map((interest)=>interest.id));setError(null);
+   })
    .catch((reason:unknown)=>setError(reason instanceof Error?reason.message:'Unable to load content from the backend'))
    .finally(()=>setLoading(false));
  },[]);
@@ -29,7 +34,7 @@ export default function Home(){
  const bookmark=(id:string)=>setSaved(s=>{const n=new Set(s);n.has(id)?n.delete(id):n.add(id);return n});
  useEffect(()=>{
   const k=(e:KeyboardEvent)=>{if(e.key==='Escape')setOpen(null);
-   if(tab===0&&/^[0-4]$/.test(e.key)&&!(e.target instanceof HTMLInputElement))setCat(['All','Trending','Tech','Business','Stocks'][+e.key]);
+   if(tab===0&&/^[0-5]$/.test(e.key)&&!(e.target instanceof HTMLInputElement))setCat(['All','Trending','Tech','Business','Stocks','World'][+e.key]);
    if(/^[1-3]$/.test(e.key)&&e.altKey)setTab(+e.key-1)};
   window.addEventListener('keydown',k);return()=>window.removeEventListener('keydown',k)},[tab]);
  const tabs=['Explore','Pulse','Food for Thought'];
@@ -46,8 +51,8 @@ export default function Home(){
   </header>
   <main>
    {error&&<div role="alert" className="mx-auto mt-4 max-w-6xl border-4 border-redstone bg-card p-4 text-sm">Backend unavailable: {error}</div>}
-   {tab===0&&<Explore articles={articles} loading={loading} cat={cat} setCat={setCat} saved={saved} bookmark={bookmark} setOpen={setOpen}/>}
-   {tab===1&&<Pulse articles={articles} active={active} setActive={setActive} saved={saved} bookmark={bookmark} setOpen={setOpen}/>}
+   {tab===0&&<Explore articles={articles} filters={filters} loading={loading} cat={cat} setCat={setCat} saved={saved} bookmark={bookmark} setOpen={setOpen}/>}
+   {tab===1&&<Pulse articles={articles} filters={filters} active={active} setActive={setActive} saved={saved} bookmark={bookmark} setOpen={setOpen}/>}
    {tab===2&&<Food drop={dailyDrop} loading={loading} goExplore={()=>setTab(0)}/>}
   </main>
   <nav className="fixed inset-x-0 bottom-0 z-30 grid h-16 grid-cols-3 gap-1 border-t-4 border-shade/70 bg-surface p-1 md:hidden" aria-label="Hotbar">
@@ -56,7 +61,7 @@ export default function Home(){
   <Reader a={open} close={()=>setOpen(null)} saved={saved} bookmark={bookmark}/>
  </div>}
 
-function Explore({articles,loading,cat,setCat,saved,bookmark,setOpen}:any){
+function Explore({articles,filters,loading,cat,setCat,saved,bookmark,setOpen}:any){
  const list=articles.filter((a:A)=>cat==='All'||a.cat===cat);
  const row=[...TICKER,...TICKER];
  return <>
@@ -65,7 +70,7 @@ function Explore({articles,loading,cat,setCat,saved,bookmark,setOpen}:any){
   </div>
   <div className="mx-auto max-w-6xl p-4">
    <div className="mb-4 flex gap-1 overflow-x-auto" role="tablist">
-    {['All','Trending','Tech','Business','Stocks','World'].map((c,i)=><button key={c} onClick={()=>setCat(c)} className={`mc-btn shrink-0 px-3 py-2 text-xs ${cat===c?'mc-on bg-card':''}`}>[{i}] {c}</button>)}
+    {['All',...(filters?.categories??[]).map((filter:{label:string})=>filter.label)].map((c,i)=><button key={c} onClick={()=>setCat(c)} className={`mc-btn shrink-0 px-3 py-2 text-xs ${cat===c?'mc-on bg-card':''}`}>[{i}] {c}</button>)}
    </div>
    {loading&&<p className="mc-panel p-4 text-sm">Mining the latest stories...</p>}
    {!loading&&!list.length&&<p className="mc-panel p-4 text-sm">No stories are available yet. Start the backend ingestion worker to populate the feed.</p>}
@@ -82,16 +87,18 @@ function Explore({articles,loading,cat,setCat,saved,bookmark,setOpen}:any){
    </div>
   </div></>}
 
-function Pulse({articles,active,setActive,saved,bookmark,setOpen}:any){
+function Pulse({articles,filters,active,setActive,saved,bookmark,setOpen}:any){
  const [tune,setTune]=useState(false);
  const [pops,setPops]=useState<number[]>([]);
  const ref=useRef<HTMLDivElement>(null); const last=useRef<[string,number]>(['',0]);
  const ranked=useMemo(()=>[...articles].map((a:A)=>({a,s:a.tags.filter(t=>active.includes(t)).length})).sort((x,y)=>y.s-x.s).map(x=>x.a),[articles,active]);
+ const filterLabel=(id:string)=>filters?.categories.find((filter:{id:string})=>filter.id===id)?.label
+  ??filters?.interests.find((filter:{id:string})=>filter.id===id)?.label??id;
  const tap=(a:A)=>{const now=Date.now();if(last.current[0]===a.id&&now-last.current[1]<300){if(!saved.has(a.id))bookmark(a.id);const k=now;setPops(p=>[...p,k]);setTimeout(()=>setPops(p=>p.filter(x=>x!==k)),1100)}last.current=[a.id,now]};
  const go=(d:number)=>ref.current?.scrollBy({top:d*ref.current.clientHeight,behavior:'smooth'});
  return <div className="relative h-[calc(100dvh-7.5rem)] md:h-[calc(100dvh-3.5rem)]">
   <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-2 bg-surface/95 p-2">
-   <div className="flex flex-1 gap-1 overflow-x-auto">{active.map((t:string)=><span key={t} className={`${px} mc-slot shrink-0 px-2 py-1 text-[11px]`}>{t}</span>)}</div>
+   <div className="flex flex-1 gap-1 overflow-x-auto">{active.map((t:string)=><span key={t} className={`${px} mc-slot shrink-0 px-2 py-1 text-[11px]`}>{filterLabel(t)}</span>)}</div>
    <button onClick={()=>setTune(true)} className="mc-btn px-3 py-1 text-xs">TUNE</button></div>
   <div ref={ref} className="h-full snap-y snap-mandatory overflow-y-auto">
    {ranked.map(a=><section key={a.id} onClick={()=>tap(a)} className="flex h-full snap-start items-center justify-center p-4 pt-16 select-none">
@@ -110,7 +117,10 @@ function Pulse({articles,active,setActive,saved,bookmark,setOpen}:any){
   {tune&&<div className="fixed inset-0 z-40 flex items-center justify-center bg-shade/60 p-4" onClick={()=>setTune(false)}>
    <div className="mc-panel w-full max-w-sm p-5" onClick={e=>e.stopPropagation()} role="dialog" aria-label="Tune your feed">
     <h3 className={`${px} mb-3 text-lg`}>Tune your feed</h3>
-    <div className="flex flex-wrap gap-2">{INTERESTS.map(t=>{const on=active.includes(t);return <button key={t} aria-pressed={on} onClick={()=>setActive(on?active.filter((x:string)=>x!==t):[...active,t])} className={`mc-btn px-3 py-1.5 text-xs ${on?'mc-on bg-emerald text-onore':''}`}>{t}</button>})}</div>
+    <div className="flex flex-wrap gap-2">
+     {filters?.categories.map((filter:{id:string;label:string})=>{const on=active.includes(filter.id);return <button key={filter.id} aria-pressed={on} onClick={()=>setActive(on?active.filter((x:string)=>x!==filter.id):[...active,filter.id])} className={`mc-btn px-3 py-1.5 text-xs ${on?'mc-on bg-emerald text-onore':''}`}>{filter.label}</button>})}
+     {filters?.interests.map((filter:{id:string;label:string})=>{const on=active.includes(filter.id);return <button key={filter.id} aria-pressed={on} onClick={()=>setActive(on?active.filter((x:string)=>x!==filter.id):[...active,filter.id])} className={`mc-btn px-3 py-1.5 text-xs ${on?'mc-on bg-emerald text-onore':''}`}>{filter.label}</button>})}
+    </div>
     <button onClick={()=>setTune(false)} className="mc-btn mt-4 w-full py-2 text-sm">Done</button></div></div>}
  </div>}
 

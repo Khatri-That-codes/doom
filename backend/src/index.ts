@@ -1,6 +1,6 @@
 import { createServer } from "./api/server.js";
 
-const port = Number(process.env.PORT ?? 4000);
+const port = Number(process.env.PORT ?? 4013);
 const server = createServer();
 
 server.listen({ host: "0.0.0.0", port }).catch((error) => {
