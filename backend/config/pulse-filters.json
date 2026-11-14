@@ -1,0 +1,145 @@
+{
+  "version": "1.1",
+  "interests": [
+    {
+      "id": "ai",
+      "label": "#AI",
+      "type": "topic",
+      "categoryId": "tech",
+      "keywords": ["ai", "artificial intelligence", "machine learning", "llm", "neural", "openai", "anthropic", "gemini", "reasoning model", "agents"]
+    },
+    {
+      "id": "semiconductors",
+      "label": "#Semiconductors",
+      "type": "topic",
+      "categoryId": "tech",
+      "keywords": ["semiconductor", "chip", "chips", "processor", "foundry", "wafer", "lithography", "gpu", "npu", "silicon", "tsmc", "asml"]
+    },
+    {
+      "id": "cybersecurity",
+      "label": "#Cybersecurity",
+      "type": "topic",
+      "categoryId": "tech",
+      "keywords": ["cybersecurity", "hack", "breach", "encryption", "zero-day", "ransomware", "infosec", "privacy", "vulnerability"]
+    },
+    {
+      "id": "robotics",
+      "label": "#Robotics",
+      "type": "topic",
+      "categoryId": "tech",
+      "keywords": ["robotics", "robot", "humanoid", "automation", "autonomous", "drone", "lidar", "self-driving"]
+    },
+    {
+      "id": "devtools",
+      "label": "#DevTools",
+      "type": "topic",
+      "categoryId": "tech",
+      "keywords": ["open source", "developer", "programming", "software", "cloud", "kubernetes", "rust", "typescript", "api", "database"]
+    },
+    {
+      "id": "startups",
+      "label": "#Startups",
+      "type": "topic",
+      "categoryId": "business",
+      "keywords": ["startup", "startups", "venture capital", "vc", "founder", "seed round", "series a", "unicorn", "bootstrapped", "y combinator"]
+    },
+    {
+      "id": "saas",
+      "label": "#SaaS",
+      "type": "topic",
+      "categoryId": "business",
+      "keywords": ["saas", "enterprise software", "b2b", "arr", "subscription", "pricing model", "churn", "cloud software"]
+    },
+    {
+      "id": "fintech",
+      "label": "#Fintech",
+      "type": "topic",
+      "categoryId": "business",
+      "keywords": ["fintech", "payments", "neobank", "stripe", "digital banking", "stablecoin", "remittance", "lending"]
+    },
+    {
+      "id": "markets",
+      "label": "#Markets",
+      "type": "topic",
+      "categoryId": "stocks",
+      "keywords": ["market", "markets", "stocks", "shares", "investor", "equities", "wall street", "s&p 500", "nasdaq", "ipo", "etf"]
+    },
+    {
+      "id": "macro",
+      "label": "#Macro",
+      "type": "topic",
+      "categoryId": "stocks",
+      "keywords": ["macro", "inflation", "interest rates", "federal reserve", "fed", "central bank", "gdp", "cpi", "bond yields", "recession", "treasury"]
+    },
+    {
+      "id": "earnings",
+      "label": "#Earnings",
+      "type": "topic",
+      "categoryId": "stocks",
+      "keywords": ["earnings", "quarterly results", "revenue", "guidance", "eps", "profit margin", "q1", "q2", "q3", "q4", "balance sheet"]
+    },
+    {
+      "id": "crypto",
+      "label": "#Crypto",
+      "type": "topic",
+      "categoryId": "stocks",
+      "keywords": ["crypto", "bitcoin", "btc", "ethereum", "eth", "blockchain", "web3", "defi", "token", "on-chain"]
+    },
+    {
+      "id": "nvda",
+      "label": "$NVDA",
+      "type": "ticker",
+      "categoryId": "stocks",
+      "keywords": ["nvda", "nvidia", "jensen huang", "cuda", "blackwell", "rubin", "h100", "h200"]
+    },
+    {
+      "id": "aapl",
+      "label": "$AAPL",
+      "type": "ticker",
+      "categoryId": "stocks",
+      "keywords": ["aapl", "apple", "iphone", "mac", "tim cook", "ios", "apple silicon", "vision pro"]
+    },
+    {
+      "id": "msft",
+      "label": "$MSFT",
+      "type": "ticker",
+      "categoryId": "stocks",
+      "keywords": ["msft", "microsoft", "azure", "satya nadella", "copilot", "windows"]
+    },
+    {
+      "id": "tsla",
+      "label": "$TSLA",
+      "type": "ticker",
+      "categoryId": "stocks",
+      "keywords": ["tsla", "tesla", "elon musk", "ev", "electric vehicle", "cybertruck", "fsd", "megapack"]
+    },
+    {
+      "id": "energy",
+      "label": "#Energy",
+      "type": "topic",
+      "categoryId": "world",
+      "keywords": ["energy", "electricity", "grid", "renewable", "solar", "battery", "nuclear", "geothermal", "power plant", "oil", "gas"]
+    },
+    {
+      "id": "geopolitics",
+      "label": "#Geopolitics",
+      "type": "topic",
+      "categoryId": "world",
+      "keywords": ["geopolitics", "sanctions", "trade war", "tariffs", "diplomacy", "treaty", "foreign policy", "summit", "supply chain"]
+    },
+    {
+      "id": "space",
+      "label": "#Space",
+      "type": "topic",
+      "categoryId": "science",
+      "keywords": ["space", "orbit", "rocket", "satellite", "nasa", "spacex", "starship", "lunar", "mars", "telescope", "aerospace"]
+    },
+    {
+      "id": "biotech",
+      "label": "#Biotech",
+      "type": "topic",
+      "categoryId": "science",
+      "keywords": ["biotech", "crispr", "gene therapy", "clinical trial", "fda", "longevity", "genomics", "pharma", "protein folding"]
+    }
+  ]
+}

@@ -1,8 +1,8 @@
-export type StoryCategory = 'trending' | 'tech' | 'business' | 'stocks' | 'world';
+export type StoryCategory = string;
 
 export type A = {
   id: string;
-  cat: 'Trending' | 'Tech' | 'Business' | 'Stocks' | 'World';
+  cat: string;
   src: number;
   h: string;
   t: string;
@@ -23,6 +23,11 @@ export type DailyDrop = {
   options: [string, string];
 };
 
+export type PulseFilters = {
+  categories: Array<{ id: StoryCategory; label: string; slot?: number; oreAccent?: string; description?: string }>;
+  interests: Array<{ id: string; label: string; type?: 'topic' | 'ticker'; categoryId?: StoryCategory }>;
+};
+
 type BackendStory = {
   id: string;
   title: string;
@@ -32,18 +37,11 @@ type BackendStory = {
   category: StoryCategory;
   publishedAt: string;
   tickers: string[];
+  tags: string[];
   sourceCount: number;
 };
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
-
-const categoryLabels: Record<StoryCategory, A['cat']> = {
-  trending: 'Trending',
-  tech: 'Tech',
-  business: 'Business',
-  stocks: 'Stocks',
-  world: 'World'
-};
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4013';
 
 function formatAge(publishedAt: string): string {
   const ageMinutes = Math.max(0, Math.floor((Date.now() - Date.parse(publishedAt)) / 60000));
@@ -53,17 +51,18 @@ function formatAge(publishedAt: string): string {
   return `${Math.floor(ageHours / 24)}d ago`;
 }
 
-function toArticle(story: BackendStory): A {
+function toArticle(story: BackendStory, categories: PulseFilters['categories']): A {
   const summary = story.summary.trim() || story.title;
+  const category = categories.find((candidate) => candidate.id === story.category);
   return {
     id: story.id,
-    cat: categoryLabels[story.category],
+    cat: category?.label ?? story.category,
     src: story.sourceCount,
     h: story.title,
     t: summary,
     body: [summary],
     tick: story.tickers,
-    tags: story.tickers,
+    tags: story.tags,
     ago: formatAge(story.publishedAt),
     pub: story.source,
     url: story.url
@@ -78,12 +77,16 @@ async function getJson<T>(path: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-export async function getStories(): Promise<A[]> {
+export async function getStories(categories: PulseFilters['categories']): Promise<A[]> {
   const result = await getJson<{ stories: BackendStory[] }>('/api/stories');
-  return result.stories.map(toArticle);
+  return result.stories.map((story) => toArticle(story, categories));
 }
 
 export async function getDailyDrop(): Promise<DailyDrop> {
   const result = await getJson<{ drop: DailyDrop }>('/api/daily-drop');
   return result.drop;
+}
+
+export async function getPulseFilters(): Promise<PulseFilters> {
+  return getJson<PulseFilters>('/api/pulse/filters');
 }
