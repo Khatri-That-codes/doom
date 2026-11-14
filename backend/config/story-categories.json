@@ -1,0 +1,53 @@
+{
+  "version": "1.0",
+  "categories": [
+    {
+      "id": "trending",
+      "label": "Trending",
+      "slot": 1,
+      "oreAccent": "redstone",
+      "description": "High-velocity breaking stories across multiple outlets",
+      "aliases": ["Top Stories", "Just In", "Latest News", "General"]
+    },
+    {
+      "id": "tech",
+      "label": "Tech",
+      "slot": 2,
+      "oreAccent": "diamond",
+      "description": "AI, software engineering, hardware, and frontier science",
+      "aliases": ["Technology"]
+    },
+    {
+      "id": "business",
+      "label": "Business",
+      "slot": 3,
+      "oreAccent": "gold",
+      "description": "Startups, strategy, leadership, and global industries",
+      "aliases": []
+    },
+    {
+      "id": "stocks",
+      "label": "Stocks",
+      "slot": 4,
+      "oreAccent": "emerald",
+      "description": "Equities, earnings, macroeconomics, and crypto markets",
+      "aliases": []
+    },
+    {
+      "id": "world",
+      "label": "World",
+      "slot": 5,
+      "oreAccent": "lapis",
+      "description": "Geopolitics, policy, climate, and global events",
+      "aliases": ["Australia News", "Politics", "Regional / Pacific"]
+    },
+    {
+      "id": "science",
+      "label": "Science",
+      "slot": 6,
+      "oreAccent": "amethyst",
+      "description": "Space exploration, biotech, physics, and breakthroughs",
+      "aliases": ["Analysis & Research"]
+    }
+  ]
+}

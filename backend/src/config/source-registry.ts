@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { z } from "zod";
+import { categoryFromSourceLabel } from "./category-registry.js";
 import type { FeedSource, StoryCategory } from "../domain/types.js";
 
 const sourceSchema = z.object({
@@ -18,19 +19,6 @@ const registrySchema = z.object({
   regions: z.record(z.array(sourceSchema))
 });
 
-const categoryMap: Record<string, StoryCategory> = {
-  "Top Stories": "trending",
-  "Just In": "trending",
-  "Latest News": "trending",
-  General: "trending",
-  Technology: "tech",
-  "Australia News": "world",
-  World: "world",
-  "Regional / Pacific": "world",
-  Politics: "world",
-  "Analysis & Research": "world"
-};
-
 function readRegistry(): unknown {
   return JSON.parse(readFileSync(new URL("../../config/sources.json", import.meta.url), "utf8"));
 }
@@ -43,7 +31,7 @@ export function loadFeedSources(): FeedSource[] {
     id: source.id,
     name: source.provider,
     url: source.rss_url,
-    category: categoryMap[source.category] ?? "trending",
+    category: categoryFromSourceLabel(source.category),
     pollIntervalMinutes: source.poll_interval_minutes
   }));
 }

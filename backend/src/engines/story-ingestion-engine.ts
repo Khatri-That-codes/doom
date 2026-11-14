@@ -1,11 +1,13 @@
 import Parser from "rss-parser";
-import type { FeedSource, Story, StoryCategory } from "../domain/types.js";
+import { loadPulseFilters, tagStory } from "../config/pulse-filter-registry.js";
+import type { FeedSource, Story } from "../domain/types.js";
 import { InMemoryStore } from "../store/in-memory-store.js";
 
 type FeedItem = Parser.Item & { contentSnippet?: string };
 
 export class StoryIngestionEngine {
   private readonly parser = new Parser<Record<string, never>, FeedItem>();
+  private readonly filters = loadPulseFilters();
 
   public constructor(private readonly store: InMemoryStore) {}
 
@@ -27,6 +29,12 @@ export class StoryIngestionEngine {
         category: source.category,
         publishedAt: new Date(item.pubDate).toISOString(),
         tickers: this.extractTickers(item.title),
+        tags: tagStory({
+          title: item.title.trim(),
+          summary: (item.contentSnippet ?? item.content ?? "").trim(),
+          category: source.category,
+          tickers: this.extractTickers(item.title)
+        }, this.filters),
         sourceCount: 1
       };
 
@@ -45,8 +53,3 @@ export class StoryIngestionEngine {
     return [...text.matchAll(/\$([A-Z]{1,5})\b/g)].map((match) => match[1]);
   }
 }
-
-export const defaultFeedSources: FeedSource[] = [
-  { id: "example-tech", name: "Example Tech Feed", url: "https://example.com/tech.xml", category: "tech", pollIntervalMinutes: 30 },
-  { id: "example-world", name: "Example World Feed", url: "https://example.com/world.xml", category: "world", pollIntervalMinutes: 30 }
-];
